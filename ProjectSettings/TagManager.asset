@@ -6,18 +6,20 @@ TagManager:
   tags:
   - Wall
   - Enemy
-  - PlayerAttack
+  - PlayerShell
+  - PlayerBullet
+  - DataFragment
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Landscape
+  - Wall
   - Water
   - UI
   - Player
-  - 
-  - 
-  - 
+  - Enemy
+  - Item
+  - ItemShell
   - 
   - 
   - 
@@ -49,4 +51,7 @@ TagManager:
     locked: 0
   - name: Landscapes
     uniqueID: 1852108329
+    locked: 0
+  - name: UI
+    uniqueID: 2437093977
     locked: 0

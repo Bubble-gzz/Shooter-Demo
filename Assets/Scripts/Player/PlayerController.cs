@@ -4,102 +4,135 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    const float ZERO = 0.001f;
+    float _maxMoveSpeed;
+    float maxMoveSpeed{
+        get{
+            return _maxMoveSpeed * core.myTimeScale;
+        }
+        set{
+            _maxMoveSpeed = value;
+        }
+    }
 
+    float _dashForce;
+    float dashForce{
+        get{
+            return _dashForce * core.myTimeScale;
+        }
+        set{
+            _dashForce = value;
+        }
+    }
     [SerializeField]
-    float damping = 30;
-    [SerializeField]
-    float pushForce = 80;
-    [SerializeField]
-    float maxMoveSpeed = 10;
+    int dashCount;
+    int maxDashCount;
 
-    [SerializeField]
+    float _damping;
+    float damping{
+        get{
+            if (isDashing) return _damping * 2;
+            return _damping;
+        }
+        set{
+            _damping = value;
+        }
+    }
+    float pushForce;
     float facingAngle;
-    
-    float moveSpeed;
     Rigidbody2D body;
     Vector3 facingVector;
     [SerializeField]
     Vector2 velocity;
-    float fireLoadTime = 0.1f;
-    bool fireFreeze;
+    Player core;
     [SerializeField]
-    GameObject bulletPrefab;
+    bool isDashing;
+    float steerFactorOfDash;
+    float dashChargeCountdown;
+    bool isDashChargeCountdown;
+    Vector2 lastDirection;
+
+    int debugCounter;
+    float recoilFactor;
     void Awake()
     {
         GamePlay.player = transform.parent.gameObject;
+        maxMoveSpeed = 8;
+        maxDashCount = 1;
+        damping = 30;
+        pushForce = 80;
+        dashCount = maxDashCount;
+        dashForce = 22;
+        dashChargeCountdown = 2f;
+        isDashChargeCountdown = false;
+        lastDirection = new Vector2(1,0);
+        steerFactorOfDash = 0.1f;
+        recoilFactor = 3.5f;
     }
     void Start()
     {
-        fireFreeze = false;
-        body = transform.parent.GetComponent<Rigidbody2D>();
+        core = GameObject.Find("Player").GetComponent<Player>();
+        GameObject player = transform.parent.gameObject;
+        body = player.GetComponent<Rigidbody2D>();
         velocity = new Vector2(0,0);
-    //    moveSpeed = 0;
+        debugCounter = 0;
+        AttackController.Event_Fire?.AddListener(Recoil);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        DashChargeCheck();
         Move();
+        //Debug.Log(core.myTimeScale);
     }
-    void FixedUpdate()
-    {   
-        FireCheck();
-    }
-    void Move() // wsad
+    void Move()
     {
-        Vector2 aimVector = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
-        velocity += aimVector * pushForce * Time.deltaTime;
-        float moveSpeed = velocity.magnitude;
-        moveSpeed = Mathf.Max(moveSpeed - damping * Time.deltaTime, 0.001f);
-        if (moveSpeed > maxMoveSpeed) moveSpeed = maxMoveSpeed;
-        velocity = velocity.normalized * moveSpeed;
-        if (moveSpeed > 0.001f) body.velocity = velocity;
-        facingAngle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
-        transform.eulerAngles = new Vector3(0, 0, facingAngle);
-        //Mathf.Deg2Rad(facingAngle);
-        
-    }
-    void FireCheck()
-    {
-        if (Input.GetMouseButton(0))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!fireFreeze)
-                StartCoroutine(Fire());
+            //Debug.Log("Dash Start" + debugCounter);
+            //debugCounter++;
+            if (!isDashing && dashCount > 0)
+            {
+                isDashing = true;
+                dashCount--;
+                velocity += dashForce * lastDirection;
+            }
         }
-    }
-    IEnumerator Fire()
-    {
-        if (bulletPrefab == null) yield break;
-        fireFreeze = true;
-    //    Debug.Log("Fire");
-        GameObject bullet = Instantiate(bulletPrefab);
-        yield return new WaitForSeconds(fireLoadTime);
-        fireFreeze = false;
-    }
-    void Movement1() // toward mouse
-    {
-        Vector3 aimVector = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        transform.eulerAngles = new Vector3(0, 0, Utility.Vec2Angle(aimVector));
 
-        if (Input.GetKey(KeyCode.W)) {
-            moveSpeed += pushForce * Time.deltaTime;
+        Vector2 aimVector = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
+        if (!isDashing) velocity += aimVector * pushForce * Time.deltaTime * core.myTimeScale;
+        else velocity = velocity.magnitude * (velocity + aimVector * steerFactorOfDash).normalized;
+
+        float moveSpeed = velocity.magnitude;
+        moveSpeed = Mathf.Max(moveSpeed - damping * Time.deltaTime * core.myTimeScale, ZERO);
+        if (!isDashing) {
             if (moveSpeed > maxMoveSpeed) moveSpeed = maxMoveSpeed;
         }
-        if (Input.GetKey(KeyCode.S)) {
-            moveSpeed -= pushForce * Time.deltaTime;
-            if (moveSpeed < -maxMoveSpeed) moveSpeed = -maxMoveSpeed;
-        }
-        if (moveSpeed > 0) moveSpeed = Mathf.Max(moveSpeed - damping * Time.deltaTime, 0.001f);
-        if (moveSpeed < 0) moveSpeed = Mathf.Min(moveSpeed + damping * Time.deltaTime, 0.001f);
-        //Mathf.Deg2Rad(facingAngle);
-        body.velocity = getDirVec(facingAngle) * moveSpeed;
-        while (facingAngle > 360) facingAngle -= 360;
-        while (facingAngle < 0) facingAngle += 360;
+        velocity = velocity.normalized * moveSpeed;
+
+        if (moveSpeed > ZERO) body.velocity = velocity;
+        else body.velocity = Vector3.zero;
+
+        facingAngle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+        transform.eulerAngles = new Vector3(0, 0, facingAngle);
+
+        if (isDashing && moveSpeed < maxMoveSpeed) isDashing = false;
+        if (velocity.magnitude > ZERO) lastDirection = velocity.normalized;
     }
-    Vector3 getDirVec(float angleDeg)
+    void DashChargeCheck()
     {
-        float angle = angleDeg * Mathf.Deg2Rad;
-        return new Vector3(Mathf.Cos(angle),Mathf.Sin(angle),0).normalized;
+        if (isDashChargeCountdown || dashCount == maxDashCount) return;
+        StartCoroutine(DashChargeCountdown());
+    }
+    IEnumerator DashChargeCountdown()
+    {
+        isDashChargeCountdown = true;
+        yield return new WaitForSeconds(dashChargeCountdown);
+        dashCount++;
+        isDashChargeCountdown = false;
+    }
+    void Recoil()
+    {
+        velocity -= AttackController.recoilForce * recoilFactor * AimerController.aimVector;
     }
 }

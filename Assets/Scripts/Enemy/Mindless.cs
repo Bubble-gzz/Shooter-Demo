@@ -7,16 +7,19 @@ public class Mindless : Enemy
     // Start is called before the first frame update
     protected override void Start()
     {
-        base.Start();
-        maxhp = 20;
+        maxhp = 30;
         hp = maxhp;
-        speed = 5;
+        value = 100;
+        speed = 2;
+        collisionDamage = 1;
+        fragmentBlastForce = 15;
+        base.Start();
     }
 
     // Update is called once per frame
     protected override void Update()
     {
-        base.Start();
+        //base.Start();
         TurnToPlayer();
     }
 }
