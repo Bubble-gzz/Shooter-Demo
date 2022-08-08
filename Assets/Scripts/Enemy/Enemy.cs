@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     Rigidbody2D rb;
     protected float _speed;
     protected float fragmentBlastForce;
+    protected float energyRate = 1.0f;
     protected float speed{
         get{
             return _speed * myTimeScale;
@@ -49,10 +50,11 @@ public class Enemy : MonoBehaviour
     {
 
     }
-    protected void onHurt(float damage)
+    protected virtual void onHurt(float damage)
     {
         if (hp < ZERO) return ;
         hp -= damage;
+        GamePlay.player.AbsorbEnergy(damage * energyRate);
         healthBar.targetHealth = hp;
         StartCoroutine(FlashVFX(5));
     /*    ParticleSystem damageParticles = Instantiate(damageParticlesPrefab,transform.position,Quaternion.Euler(0,0,0)).GetComponent<ParticleSystem>();

@@ -36,7 +36,7 @@ public class FloatingHealthBar : MonoBehaviour
         subRect.localScale = new Vector2(1,1);
         fadeoutSpeed = 5;
         idleTime = 0;
-        idleTimeThreshold = 1.5f;
+        idleTimeThreshold = 3f;
         mainCam = GamePlay.mainCamera.GetComponent<Camera>();
     }
 
@@ -68,8 +68,8 @@ public class FloatingHealthBar : MonoBehaviour
             idleTime += Time.deltaTime;
             if (idleTime > idleTimeThreshold)
             {
-                //frontImage.color = ChangeAlpha(frontImage.color, -fadeoutSpeed * frontAlpha * Time.deltaTime);
-                //backImage.color = ChangeAlpha(backImage.color, -fadeoutSpeed * backAlpha* Time.deltaTime);
+                frontImage.color = ChangeAlpha(frontImage.color, -fadeoutSpeed * frontAlpha * Time.deltaTime);
+                backImage.color = ChangeAlpha(backImage.color, -fadeoutSpeed * backAlpha* Time.deltaTime);
             }
         }
         if (targetHealth < ZERO) Destroy(gameObject);

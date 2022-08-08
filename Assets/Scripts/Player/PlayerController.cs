@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
     float recoilFactor;
     void Awake()
     {
-        GamePlay.player = transform.parent.gameObject;
+        //GamePlay.player = transform.parent.gameObject;
         maxMoveSpeed = 8;
         maxDashCount = 1;
         damping = 30;

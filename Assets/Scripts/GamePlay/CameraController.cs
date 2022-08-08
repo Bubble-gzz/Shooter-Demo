@@ -12,7 +12,6 @@ public class CameraController : MonoBehaviour
     public float attentionSize;
     float zoomoutSpeed;
     float zoominSpeed;
-    int poolSize;
     int number;
     [SerializeField]
     float subLeftRate = 0.2f, subRightRate = 0.8f, subTopRate = 0.2f, subBottomRate = 0.8f;
@@ -25,7 +24,6 @@ public class CameraController : MonoBehaviour
     }
     void Start()
     {
-        poolSize = 1000;
         smoothSpeed = 5f;
         thisCamera = GetComponent<Camera>();
         target = GameObject.Find("Player").transform;
@@ -68,7 +66,7 @@ public class CameraController : MonoBehaviour
         float right = mainCam.ScreenToWorldPoint(new Vector3(subRight,0,0)).x;
         float top = mainCam.ScreenToWorldPoint(new Vector3(0,subTop,0)).y;
         float bottom = mainCam.ScreenToWorldPoint(new Vector3(0,subBottom,0)).y;
-        Debug.Log("cam leftBorder: " + left);
+        //Debug.Log("cam leftBorder: " + left);
         Vector3 newPosition = transform.position;
         Vector3 delta = new Vector3(0,0,0);
         if (target.position.x < left) delta.x = target.position.x - left;
