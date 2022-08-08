@@ -21,6 +21,7 @@ public class FloatingHealthBar : MonoBehaviour
     float idleTimeThreshold;
     float fadeoutSpeed;
     float frontAlpha, backAlpha;
+    Camera mainCam;
     void Start()
     {
         currentHealth = targetHealth = totalHealth;
@@ -36,6 +37,7 @@ public class FloatingHealthBar : MonoBehaviour
         fadeoutSpeed = 5;
         idleTime = 0;
         idleTimeThreshold = 1.5f;
+        mainCam = GamePlay.mainCamera.GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -43,7 +45,7 @@ public class FloatingHealthBar : MonoBehaviour
     {
         if (parentObject)
         {
-            Vector2 pos = (Vector2)GamePlay.mainCamera.GetComponent<Camera>().WorldToScreenPoint(parentObject.transform.position) + offset;
+            Vector2 pos = (Vector2)mainCam.WorldToScreenPoint(parentObject.transform.position) + offset;
             //Debug.Log(pos);
             pos.x = pos.x * 1.0f / Screen.width * 1920;
             pos.y = pos.y * 1.0f / Screen.height * 1080;
