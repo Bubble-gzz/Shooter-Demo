@@ -10,7 +10,7 @@ public class FloatingHealthBar : MonoBehaviour
     [SerializeField]
     public GameObject parentObject;
     RectTransform rect;
-    Vector2 offset;
+    public Vector2 offset;
     float currentHealth;
     public float targetHealth;
     public float totalHealth;
@@ -31,7 +31,6 @@ public class FloatingHealthBar : MonoBehaviour
         backImage = transform.Find("Back").GetComponent<Image>();
         backAlpha = backImage.color.a;
 
-        offset = new Vector2(0,100);
         rect.localScale = scale0;
         subRect.localScale = new Vector2(1,1);
         fadeoutSpeed = 5;

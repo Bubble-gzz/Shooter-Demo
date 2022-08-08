@@ -26,9 +26,8 @@ public class PlayerBullet_Basic : Bullet
         aimer = launcher.transform.parent.gameObject;
         transform.position = launcher.transform.position;
  
-        transform.eulerAngles = aimer.transform.eulerAngles;
         //rb.velocity = Utility.Angle2Vec(aimer.transform.eulerAngles.z) * speed;
-        velocity = Utility.Angle2Vec(aimer.transform.eulerAngles.z) * speed;
+        velocity = Utility.Angle2Vec(transform.eulerAngles.z) * speed;
         colliderTags.Add("Enemy",0);
         scale0 = transform.localScale;
         layerMask |= LayerMask.GetMask("Enemy");

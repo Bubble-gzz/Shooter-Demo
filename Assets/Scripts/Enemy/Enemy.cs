@@ -24,19 +24,21 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     GameObject damageParticlesPrefab;
     Vector2 healthBarScale;
-    FloatingHealthBar healthBar;
+    protected FloatingHealthBar healthBar;
 
     int flashVFX_count;
     public float myTimeScale;
-    protected virtual void Start()
+    protected void BeforeStart()
     {
         myTimeScale = 1.0f;
         rb = GetComponent<Rigidbody2D>();
         healthBar = Instantiate(GamePlay.floatingHealthBarPrefab).GetComponent<FloatingHealthBar>();
+    }
+    protected virtual void Start()
+    {
         healthBar.transform.parent = GamePlay.GamePlay_UI.transform;
         healthBar.parentObject = gameObject;
         healthBar.totalHealth = maxhp;
-        healthBar.scale0 = new Vector2(0.15f, 0.15f);
         //damageParticles = transform.Find("DamageParticles").GetComponent<ParticleSystem>();
         //damageParticles.Stop();
         //damageParticles.Play();
@@ -49,6 +51,7 @@ public class Enemy : MonoBehaviour
     }
     protected void onHurt(float damage)
     {
+        if (hp < ZERO) return ;
         hp -= damage;
         healthBar.targetHealth = hp;
         StartCoroutine(FlashVFX(5));
