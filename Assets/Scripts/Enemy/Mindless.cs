@@ -7,7 +7,7 @@ public class Mindless : Enemy
     // Start is called before the first frame update
     protected override void Start()
     {
-        maxhp = 30;
+        maxhp = 100;
         hp = maxhp;
         value = 100;
         speed = 2;
