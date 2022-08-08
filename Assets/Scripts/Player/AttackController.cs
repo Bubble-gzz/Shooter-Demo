@@ -74,14 +74,14 @@ public class AttackController : MonoBehaviour
         bullet.GetComponent<Bullet>().speed = bulletSpeed;
         bullet.transform.eulerAngles = aimer.transform.eulerAngles;
 
-        bullet = Instantiate(bulletPrefab);
+       /* bullet = Instantiate(bulletPrefab);
         bullet.GetComponent<Bullet>().speed = bulletSpeed;
         bullet.transform.rotation = aimer.transform.rotation * Quaternion.Euler(0,0,5);
 
         bullet = Instantiate(bulletPrefab);
         bullet.GetComponent<Bullet>().speed = bulletSpeed;
         bullet.transform.rotation = aimer.transform.rotation * Quaternion.Euler(0,0,-5);
-
+*/
         yield return new WaitForSeconds(fireLoadTime);
         fireFreeze = false;
     }

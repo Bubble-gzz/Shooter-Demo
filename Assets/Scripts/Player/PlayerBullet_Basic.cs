@@ -19,7 +19,7 @@ public class PlayerBullet_Basic : Bullet
         trail = transform.Find("Trail").gameObject.GetComponent<ParticleSystem>();
         trail.Play();
         damage = 1;
-        range = 10;
+        range = 7;
         shakeForce = 0.07f;
 
         launcher = GamePlay.playerLauncher;
@@ -35,16 +35,19 @@ public class PlayerBullet_Basic : Bullet
     protected override void Update()
     {
         base.Update();
+        velocity = velocity.normalized * speed;
+        if (velocity.magnitude < ZERO) StartCoroutine(Vanish());
         //Debug.Log("bullet.velocity = " + rb.velocity.magnitude);
         travelWithRaycast((Vector3)velocity * Time.deltaTime);
         transform.localScale = new Vector3(scale0.x * (1.0f + velocity.magnitude / 20.0f), scale0.y, scale0.z);
-
     }
-    protected override IEnumerator ExplodeVFX(Quaternion bulletRotation, string tag)
+    protected override IEnumerator ExplodeVFX(Vector3 bulletDir, Vector3 normal, string tag)
     {
+        Vector3 mirror = Quaternion.Euler(0,0,90) * normal;
+        Vector3 dir = Quaternion.FromToRotation(bulletDir, mirror) * mirror;
         //Debug.Log("After base.ExplodeVFX");
-        GamePlay.GenBurstParticle_60(blastPrefab,transform.position, bulletRotation * Quaternion.Euler(0,0,180), new Vector2(2,3));
+        GamePlay.GenBurstParticle_60(blastPrefab,transform.position, Quaternion.Euler(0, 0, Utility.Vec2Angle(dir)), new Vector2(2,3), renderer.color.a);
         GetComponent<Renderer>().enabled = false;
-        yield return base.ExplodeVFX(bulletRotation, tag);
+        yield return base.ExplodeVFX(bulletDir, normal, tag);
     }
 }

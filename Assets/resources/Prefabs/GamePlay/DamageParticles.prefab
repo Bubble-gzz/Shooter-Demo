@@ -33,7 +33,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8393256349687324882, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.atime1
-      value: 16972
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 8393256349687324882, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.ctime1
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 8393256349687324882, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key1.a
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8393256349687324882, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
       propertyPath: InitialModule.startRotation.minMaxState
@@ -46,6 +54,14 @@ PrefabInstance:
     - target: {fileID: 8393256349687324882, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
       propertyPath: InitialModule.startRotationY.minMaxState
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8393256349687324882, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.m_NumAlphaKeys
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8393256349687324882, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.m_NumColorKeys
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8393256349687324882, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
       propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].time
@@ -101,3 +117,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
+--- !u!1 &8987783069039398487 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8393256349687324880, guid: 0a0cb1361997bc74a81d255255caa371, type: 3}
+  m_PrefabInstance: {fileID: 631017672153935495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2419570275261053903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8987783069039398487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73a551bdb6544b544b00f9e0e8fab1fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

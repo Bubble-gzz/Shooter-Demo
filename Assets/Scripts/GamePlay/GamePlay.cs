@@ -13,7 +13,7 @@ public class GamePlay
     public static GameObject floatingHealthBarPrefab;
     public static GameObject GamePlay_UI;
     // Start is called before the first frame update
-    public static void GenBurstParticle_60(GameObject prefab, Vector3 pos, Quaternion rot, Vector2 amount)
+    public static void GenBurstParticle_60(GameObject prefab, Vector3 pos, Quaternion rot, Vector2 amount, float alpha)
     {
         ParticleSystem particles = GameObject.Instantiate(prefab, pos, rot * Quaternion.Euler(0,0,-30)).GetComponent<ParticleSystem>();
         ParticleSystem.Burst burst = particles.emission.GetBurst(0);
