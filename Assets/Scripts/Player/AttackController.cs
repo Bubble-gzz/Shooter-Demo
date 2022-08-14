@@ -5,43 +5,36 @@ using UnityEngine.Events;
 
 public class AttackController : MonoBehaviour
 {
+    Player player;
     public static UnityEvent Event_Fire;
-    float _fireLoadTime;
-    GameObject launcher, aimer;
     float fireLoadTime{
         get{
-            return _fireLoadTime / core.myTimeScale;
-        }
-        set{
-            _fireLoadTime = value;
+            return player.attackinfo.fireLoadTime / player.myTimeScale;
         }
     }
-    float _bulletSpeed;
     float bulletSpeed{
         get{
-            return _bulletSpeed * core.myTimeScale;
-        }
-        set{
-            _bulletSpeed = value;
+            return player.attackinfo.bulletSpeed * player.myTimeScale;
         }
     }
+    GameObject bulletPrefab{
+        get{
+            return player.attackinfo.bulletPrefab;
+        }
+    }
+    public float recoilForce{get{return player.attackinfo.recoilForce;}}
+    public float recoilRecoverSpeed{get{return player.attackinfo.recoilRecoverSpeed;}}
+    GameObject launcher, aimer;
     bool fireFreeze;
-    [SerializeField]
-    GameObject bulletPrefab;
-    Player core;
-    public static float recoilForce;
-    public static float recoilRecoverSpeed;
+
+
     void Awake()
     {
         Event_Fire = new UnityEvent();
-        recoilForce = 1.0f;
-        recoilRecoverSpeed = 3f;
     }
     void Start()
     {
-        fireLoadTime = 0.1f;
-        bulletSpeed = 100;
-        core = GameObject.Find("Player").GetComponent<Player>();
+        player = GamePlay.player;
         fireFreeze = false;
         
         launcher = GamePlay.playerLauncher;

@@ -5,10 +5,12 @@ using UnityEngine;
 public class GunTexture : MonoBehaviour
 {
     // Start is called before the first frame update
+    Player player;
     bool isRecoiling;
     float recoilFactor = 0.2f;
     void Start()
     {
+        player = GamePlay.player;
         AttackController.Event_Fire?.AddListener(Recoil);
         isRecoiling = false;
     }
@@ -26,7 +28,7 @@ public class GunTexture : MonoBehaviour
     IEnumerator _Recoil()
     {
         isRecoiling = true;
-        float dist = AttackController.recoilForce * recoilFactor, speed = AttackController.recoilRecoverSpeed;
+        float dist = player.attackinfo.recoilForce * recoilFactor, speed = player.attackinfo.recoilRecoverSpeed;
         Vector3 localPosition0 = transform.localPosition;
         transform.localPosition += new Vector3(-dist,0,0);
         float totalDistance = 0;

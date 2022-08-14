@@ -7,7 +7,6 @@ public class GamePlay
 {
     public static GameObject playerLauncher;
     public static Player player;
-    public static UnityEvent<HeartInfo> onPlayerHurt;
     public static CameraController mainCamera;
     public static int dataCoin;
     public static GameObject floatingHealthBarPrefab;

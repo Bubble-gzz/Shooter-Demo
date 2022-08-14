@@ -5,75 +5,73 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     const float ZERO = 0.001f;
-    float _maxMoveSpeed;
+    Player player;
     float maxMoveSpeed{
         get{
-            return _maxMoveSpeed * core.myTimeScale;
-        }
-        set{
-            _maxMoveSpeed = value;
+            return player.steerinfo.maxMoveSpeed * player.myTimeScale;
         }
     }
-
-    float _dashForce;
     float dashForce{
         get{
-            return _dashForce * core.myTimeScale;
-        }
-        set{
-            _dashForce = value;
+            return player.steerinfo.dashForce * player.myTimeScale;
         }
     }
-    [SerializeField]
-    int dashCount;
-    int maxDashCount;
+    int dashCount{
+        get{
+            return player.steerinfo.dashCount;
+        }
+        set{
+            player.steerinfo.dashCount = value;
+        }
+    }
+    int maxDashCount{
+        get{
+            return player.steerinfo.maxDashCount;
+        }
+    }
 
-    float _damping;
     float damping{
         get{
-            if (isDashing) return _damping * 2;
-            return _damping;
-        }
-        set{
-            _damping = value;
+            if (isDashing) return player.steerinfo.damping * 2;
+            return player.steerinfo.damping;
         }
     }
-    float pushForce;
+    float pushForce{
+        get{
+            return player.steerinfo.pushForce;
+        }
+    }
+    float recoilFactor{
+        get{
+            return player.steerinfo.recoilFactor;
+        }
+    }
+    float dashChargeCountdown{
+        get{
+            return player.steerinfo.dashChargeCountdown;
+        }
+    }
+
     float facingAngle;
     Rigidbody2D body;
     Vector3 facingVector;
     [SerializeField]
     Vector2 velocity;
-    Player core;
     [SerializeField]
     bool isDashing;
     float steerFactorOfDash;
-    float dashChargeCountdown;
     bool isDashChargeCountdown;
     Vector2 lastDirection;
 
     int debugCounter;
-    float recoilFactor;
     void Awake()
     {
-        //GamePlay.player = transform.parent.gameObject;
-        maxMoveSpeed = 8;
-        maxDashCount = 1;
-        damping = 30;
-        pushForce = 80;
-        dashCount = maxDashCount;
-        dashForce = 22;
-        dashChargeCountdown = 2f;
-        isDashChargeCountdown = false;
-        lastDirection = new Vector2(1,0);
-        steerFactorOfDash = 0.1f;
-        recoilFactor = 3.5f;
+
     }
     void Start()
     {
-        core = GameObject.Find("Player").GetComponent<Player>();
-        GameObject player = transform.parent.gameObject;
-        body = player.GetComponent<Rigidbody2D>();
+        player = GamePlay.player;
+        body = transform.parent.gameObject.GetComponent<Rigidbody2D>();
         velocity = new Vector2(0,0);
         debugCounter = 0;
         AttackController.Event_Fire?.AddListener(Recoil);
@@ -94,17 +92,17 @@ public class PlayerController : MonoBehaviour
             if (!isDashing && dashCount > 0)
             {
                 isDashing = true;
-                dashCount--;
+                dashCount = dashCount - 1;
                 velocity += dashForce * lastDirection;
             }
         }
 
         Vector2 aimVector = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
-        if (!isDashing) velocity += aimVector * pushForce * Time.deltaTime * core.myTimeScale;
+        if (!isDashing) velocity += aimVector * pushForce * Time.deltaTime * player.myTimeScale;
         else velocity = velocity.magnitude * (velocity + aimVector * steerFactorOfDash).normalized;
 
         float moveSpeed = velocity.magnitude;
-        moveSpeed = Mathf.Max(moveSpeed - damping * Time.deltaTime * core.myTimeScale, ZERO);
+        moveSpeed = Mathf.Max(moveSpeed - damping * Time.deltaTime * player.myTimeScale, ZERO);
         if (!isDashing) {
             if (moveSpeed > maxMoveSpeed) moveSpeed = maxMoveSpeed;
         }
@@ -133,6 +131,7 @@ public class PlayerController : MonoBehaviour
     }
     void Recoil()
     {
-        velocity -= AttackController.recoilForce * recoilFactor * AimerController.aimVector;
+        if (isDashing) return;
+        velocity -= player.attackinfo.recoilForce * recoilFactor * AimerController.aimVector;
     }
 }

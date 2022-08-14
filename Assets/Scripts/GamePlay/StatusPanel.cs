@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class StatusPanel : MonoBehaviour
 {
     // Start is called before the first frame update
+    Player player;
     public static UnityEvent ClearUI;
     public static List<Vector2> heartUIPosition = new List<Vector2>();
     public static Vector2 pivot = new Vector2(180,-100);
@@ -33,18 +34,13 @@ public class StatusPanel : MonoBehaviour
             heartVesselSprites.Add(spriteName, Utility.LoadSprite(spriteName));
             if (heartVesselSprites[spriteName] == null) Debug.Log("[" + spriteName + ".Sprite] is missing!");
         }
-        if (GamePlay.onPlayerHurt == null) GamePlay.onPlayerHurt = new UnityEvent<HeartInfo>();
-        GamePlay.onPlayerHurt.AddListener(DrawHeartVessels);
     }
     void Start()
     {
-       
+       player = GamePlay.player;
+       player.heartInfo.onInfoChange?.AddListener(DrawHeartVessels);
     }
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void DrawHeartVessels(HeartInfo heartInfo)
     {
         ClearUI.Invoke();

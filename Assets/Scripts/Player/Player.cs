@@ -5,63 +5,69 @@ using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
-    enum EnergyType{
-        Exhaust,
-        Flexible
-    }
+    const float ZERO = 0.0001f;
+    [SerializeField]
+    PlayerInfo playerinfo;
     public float myTimeScale;
-    public float energy;
-    public float maxEnergy;
-    float energyRate;
-    public bool fullEnergy;
-    public UnityEvent GainEnergy;
-    EnergyType energyType;
-    bool isConsumingEnergy;
+    public PlayerInfo.Energy energy;
+    public HeartInfo heartInfo;
+    public PlayerInfo.SteerInfo steerinfo;
+    public PlayerInfo.AttackInfo attackinfo;
+    public int def;
+    public float atk;
+    public float invincibilityTimeOnHurt;
 
     void Awake()
     {
+        InitializePlayerInfo();
+        GamePlay.player = this;
+        /*
         myTimeScale = 1f;
-        energy = 0f;
-        maxEnergy = 100f;
-        energyRate = 1f;
-        fullEnergy = false;
-        isConsumingEnergy = false;
-        GamePlay.player = GetComponent<Player>();
-        GainEnergy = new UnityEvent();
-        energyType = EnergyType.Exhaust;
+        energy = new PlayerInfo.Energy();
+
+        heartInfo = new HeartInfo();
+        steerinfo = new PlayerInfo.SteerInfo();
+        attackinfo = new PlayerInfo.AttackInfo();
+        */
     }
+    
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) ConsumeEnergy();
+        //if (Input.GetKeyDown(KeyCode.R)) ConsumeEnergy();
     }
-    public void AbsorbEnergy(float value)
-    {
-        value *= energyRate;
-        energy += value;
-        if (energy > maxEnergy) {
-            energy = maxEnergy;
-            fullEnergy = true;
-        }
-        else fullEnergy = false;
-        GainEnergy?.Invoke();
+    public void AbsorbEnergy(float amount) {
+        energy.AbsorbEnergy(amount);
     }
-    void ConsumeEnergy()
+    void InitializePlayerInfo()
     {
-        if (energyType == EnergyType.Exhaust)
-        {
-            if (!fullEnergy || isConsumingEnergy) return ;
-            isConsumingEnergy = true;
-            StartCoroutine(_ConsumeEnergy());
-        }
-        else 
-        {
-
-        }
+        energy = new PlayerInfo.Energy();
+        heartInfo = new HeartInfo();
+        steerinfo = new PlayerInfo.SteerInfo();
+        attackinfo = new PlayerInfo.AttackInfo();
+        LoadPlayerInfo();
     }
-    IEnumerator _ConsumeEnergy()
+    void LoadPlayerInfo()
     {
-        
-        isConsumingEnergy = false;
-        yield return null;
+        if (playerinfo == null) playerinfo = Resources.Load("ScriptableObjects/GamePlay/Player/PlayerInfo") as PlayerInfo;
+        myTimeScale = playerinfo.myTimeScale;
+        energy.CopyFrom(playerinfo.energy);
+        heartInfo.CopyFrom(playerinfo.heartInfo);
+        def = playerinfo.def;
+        atk = playerinfo.atk;
+        invincibilityTimeOnHurt = playerinfo.invincibilityTimeOnHurt;
+        steerinfo.CopyFrom(playerinfo.steerinfo);
+        attackinfo.CopyFrom(playerinfo.attackinfo);
+    }
+    void SavePlayerInfo()
+    {
+        if (playerinfo == null) playerinfo = Resources.Load("ScriptableObjects/GamePlay/Player/PlayerInfo") as PlayerInfo;
+        playerinfo.myTimeScale = myTimeScale;
+        playerinfo.energy.CopyFrom(energy);
+        playerinfo.heartInfo.CopyFrom(heartInfo);
+        playerinfo.def = def;
+        playerinfo.atk = atk;
+        playerinfo.invincibilityTimeOnHurt = invincibilityTimeOnHurt;
+        playerinfo.steerinfo.CopyFrom(steerinfo);
+        playerinfo.attackinfo.CopyFrom(attackinfo);
     }
 }

@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a30962711be184bab3340323de5f6f, type: 3}
+  m_Name: PlayerInfo
+  m_EditorClassIdentifier: 
+  myTimeScale: 1
+  energy:
+    amount: 0
+    capacity: 100
+    consumeRate: 1
+    energyType: 0
+    GainEnergy:
+      m_PersistentCalls:
+        m_Calls: []
+  heartInfo:
+    onInfoChange:
+      m_PersistentCalls:
+        m_Calls: []
+    solid: 6
+    maxSolid: 6
+    fragile: 0
+  def: 0
+  atk: 1
+  invincibilityTimeOnHurt: 1
+  steerinfo:
+    maxMoveSpeed: 8
+    dashForce: 22
+    dashCount: 1
+    maxDashCount: 1
+    isDashing: 0
+    pushForce: 80
+    recoilFactor: 3.5
+    dashChargeCountdown: 0.5
+  attackinfo:
+    fireLoadTime: 0.1
+    bulletSpeed: 10
+    bulletPrefab: {fileID: 4709605312518317970, guid: 1c1c4112ba4e0e641a6989854bc3b7a3, type: 3}
+    recoilForce: 1
+    recoilRecoverSpeed: 3

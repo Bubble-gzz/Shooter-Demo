@@ -17,12 +17,12 @@ public class EnergyFill : MonoBehaviour
     Gradient colorB;
     float gradientProgress;
     float gradientSpeed;
-
+    
     void Start()
     {
         player = GamePlay.player;
         image = GetComponent<Image>();
-        player.GainEnergy?.AddListener(Shine);
+        player.energy.GainEnergy?.AddListener(Shine);
         image.color = colorA0;
         fadeSpeed = 7f;
         gradientSpeed = 1.5f;
@@ -31,10 +31,10 @@ public class EnergyFill : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        image.fillAmount = player.energy / player.maxEnergy;
+        image.fillAmount = player.energy.amount / player.energy.capacity;
         if (!isShining)
         {
-            if (player.fullEnergy)
+            if (player.energy.isFullEnergy())
             {
                 gradientProgress += gradientSpeed * Time.deltaTime;
                 while (gradientProgress > 1f) gradientProgress -= 1;
@@ -45,7 +45,7 @@ public class EnergyFill : MonoBehaviour
     }
     void Shine()
     {
-        if (isShining || player.fullEnergy) return;
+        if (isShining || player.energy.isFullEnergy()) return;
         isShining = true;
         StartCoroutine(_Shine());
     }

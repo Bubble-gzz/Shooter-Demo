@@ -13,13 +13,15 @@ public class PlayerBullet_Basic : Bullet
     GameObject blastPrefab;
     ParticleSystem trail;
     Vector3 scale0;
+    bool pingpong;
+    int pingpongDir;
     protected override void Start()
     {
         base.Start();
         trail = transform.Find("Trail").gameObject.GetComponent<ParticleSystem>();
         trail.Play();
         damage = 1;
-        range = 7;
+        range = 10;
         shakeForce = 0.07f;
 
         launcher = GamePlay.playerLauncher;
@@ -31,15 +33,32 @@ public class PlayerBullet_Basic : Bullet
         colliderTags.Add("Enemy",0);
         scale0 = transform.localScale;
         layerMask |= LayerMask.GetMask("Enemy");
+        pingpong = true;
+        pingpongDir = 1;
     }
     protected override void Update()
     {
         base.Update();
+        if (pingpong)
+        {
+            if (pingpongDir == 1)
+            {
+                speed = speed * 1.05f;
+                if (speed > 15) pingpongDir = -1;
+            }
+            else
+            {
+                speed = speed - 1f;
+                if (speed < 1) pingpongDir = 1;
+            }
+
+        }
+
         velocity = velocity.normalized * speed;
         if (velocity.magnitude < ZERO) StartCoroutine(Vanish());
         //Debug.Log("bullet.velocity = " + rb.velocity.magnitude);
         travelWithRaycast((Vector3)velocity * Time.deltaTime);
-        transform.localScale = new Vector3(scale0.x * (1.0f + velocity.magnitude / 20.0f), scale0.y, scale0.z);
+        transform.localScale = new Vector3(scale0.x * (1.0f + velocity.magnitude / 10.0f), scale0.y, scale0.z);
     }
     protected override IEnumerator ExplodeVFX(Vector3 bulletDir, Vector3 normal, string tag)
     {
