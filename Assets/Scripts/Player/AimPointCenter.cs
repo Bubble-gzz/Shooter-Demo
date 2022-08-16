@@ -16,7 +16,6 @@ public class AimPointCenter : MonoBehaviour
     float concentrateSpeed;
     void Start()
     {
-        Cursor.visible = false;
         rotateSpeedFree = 120;
         radiusFree = 0.3f;
         rotateSpeedLocked = 30;
@@ -31,6 +30,7 @@ public class AimPointCenter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Cursor.visible = false;
         transform.rotation *= Quaternion.Euler(0, 0, rotateSpeed * Time.deltaTime);
         transform.position = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
         concentrate = Input.GetMouseButton(0);
